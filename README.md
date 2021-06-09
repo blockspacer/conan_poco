@@ -28,11 +28,18 @@ sudo -E docker build \
 ## Local build
 
 ```bash
+export VERBOSE=1
+export CONAN_REVISIONS_ENABLED=1
+export CONAN_VERBOSE_TRACEBACK=1
+export CONAN_PRINT_RUN_COMMANDS=1
+export CONAN_LOGGING_LEVEL=10
+export GIT_SSL_NO_VERIFY=true
+
 export PKG_NAME=poco/1.10.1@dev/stable
 conan remove --force $PKG_NAME
 # NOTE: change `build_type=Debug` to `build_type=Release` in production
 conan create . dev/stable -s build_type=Debug --profile clang --build missing
-CONAN_REVISIONS_ENABLED=1 CONAN_VERBOSE_TRACEBACK=1 CONAN_PRINT_RUN_COMMANDS=1 CONAN_LOGGING_LEVEL=10 conan upload $PKG_NAME --all -r=conan-local -c --retry 3 --retry-wait 10 --force
+conan upload $PKG_NAME --all -r=conan-local -c --retry 3 --retry-wait 10 --force
 
 # clean build cache
 conan remove "*" --build --force
@@ -41,8 +48,15 @@ conan remove "*" --build --force
 ## How to diagnose errors in conanfile (CONAN_PRINT_RUN_COMMANDS)
 
 ```bash
+export VERBOSE=1
+export CONAN_REVISIONS_ENABLED=1
+export CONAN_VERBOSE_TRACEBACK=1
+export CONAN_PRINT_RUN_COMMANDS=1
+export CONAN_LOGGING_LEVEL=10
+export GIT_SSL_NO_VERIFY=true
+
 # NOTE: about `--keep-source` see https://bincrafters.github.io/2018/02/27/Updated-Conan-Package-Flow-1.1/
-CONAN_REVISIONS_ENABLED=1 CONAN_VERBOSE_TRACEBACK=1 CONAN_PRINT_RUN_COMMANDS=1 CONAN_LOGGING_LEVEL=10 conan create . conan/stable -s build_type=Debug --profile clang --build missing --keep-source
+conan create . conan/stable -s build_type=Debug --profile clang --build missing --keep-source
 
 # clean build cache
 conan remove "*" --build --force
