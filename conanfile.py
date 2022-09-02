@@ -117,7 +117,7 @@ class PocoConan(ConanFile):
            self.options.enable_crypto or \
            self.options.force_openssl or \
            self.options.enable_jwt:
-            self.requires.add("openssl/OpenSSL_1_1_1-stable@conan/stable")
+            self.requires.add("openssl/1.1.1-stable@conan/stable")
 
     def _patch(self):
         if self.settings.compiler == "Visual Studio":
@@ -157,16 +157,18 @@ class PocoConan(ConanFile):
         return cmake
 
     def build(self):
-        self._patch()
-        cmake = self._configure_cmake()
-        cmake.build()
+        with tools.vcvars(self.settings, only_diff=False): # https://github.com/conan-io/conan/issues/6577
+            self._patch()
+            cmake = self._configure_cmake()
+            cmake.build()
 
     def package(self):
-        self.copy("LICENSE", dst="licenses", src=self._source_subfolder)
-        cmake = self._configure_cmake()
-        cmake.install()
-        tools.rmdir(os.path.join(self.package_folder, "lib", "cmake"))
-        tools.rmdir(os.path.join(self.package_folder, "cmake"))
+        with tools.vcvars(self.settings, only_diff=False): # https://github.com/conan-io/conan/issues/6577
+            self.copy("LICENSE", dst="licenses", src=self._source_subfolder)
+            cmake = self._configure_cmake()
+            cmake.install()
+            tools.rmdir(os.path.join(self.package_folder, "lib", "cmake"))
+            tools.rmdir(os.path.join(self.package_folder, "cmake"))
 
     def package_info(self):
         libs = [("enable_mongodb", "PocoMongoDB"),

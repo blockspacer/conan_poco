@@ -4,7 +4,7 @@ Modified `poco` recipe
 
 ## EXTRA FEATURES
 
-- supports "openssl/OpenSSL_1_1_1-stable@conan/stable"
+- supports "openssl/1.1.1-stable@conan/stable"
 
 # About
 
